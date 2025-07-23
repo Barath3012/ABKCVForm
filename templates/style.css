@@ -1,0 +1,59 @@
+h1 {
+  font-size: 20px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+img {
+height: 60px;
+}
+.flash-popup {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 20px;
+  border-radius: 0 0 8px 8px;
+  background-color: #d1ecf1;
+  color: #0c5460;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+}
+
+.flash-text {
+  font-size: 15px;
+}
+
+.flash-progress {
+  height: 2px; /* <— super thin bar */
+  background-color: transparent;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 100%;
+  background-color: #0c5460;
+  transition: width 0.1s linear;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #0c5460;
+  cursor: pointer;
+}

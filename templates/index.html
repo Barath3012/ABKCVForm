@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Styled Upload Form</title>
+
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body class="bg-light">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div id="flash-message" class="alert alert-info flash-popup">
+              <div class="flash-text">
+                {% for message in messages %}
+                  {{ message }}
+                {% endfor %}
+              </div>
+              <div class="flash-progress">
+                <div class="progress-bar" id="flash-progress-bar"></div>
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+
+
+        <div class="container py-5">
+            <div class="col-md-8 offset-md-2">
+                <a target="_blank">
+                    <img
+                        src="data:image/png;base64,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"
+                        class="img-fluid mb-3"
+                    />
+                </a>
+                
+
+                <h2 class="mb-4">
+                    THIRDWAVE - CV Upload
+                </h2>
+
+                <!-- 👇 FORM STARTS HERE 👇 -->
+                <form
+                    action="{{ url_for('upload') }}"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    accept-charset="UTF-8"
+                >
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label"
+                            >Full Name</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="fullname"
+                            name="fullname"
+                            placeholder="Enter your full name"
+                            value="{{ form_data.fullname if form_data else '' }}"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label"
+                            >Email address</label
+                        >
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            value="{{ form_data.email if form_data else '' }}"
+                            placeholder="Enter email"
+                            required
+                        />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="file" class="form-label"
+                            >Upload your CV</label
+                        >
+                        <input
+                            class="form-control"
+                            type="file"
+                            id="file"
+                            name="file"
+                            accept=".pdf"
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+                </form>
+                <!-- 👆 FORM ENDS HERE 👆 -->
+            </div>
+        </div>
+        
+        <script>
+        function dismissFlash() {
+          const flashMessage = document.getElementById("flash-message");
+          if (flashMessage) {
+            flashMessage.style.transition = "opacity 0.4s ease";
+            flashMessage.style.opacity = 0;
+            setTimeout(() => flashMessage.remove(), 400);
+          }
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+          const flashMessage = document.getElementById("flash-message");
+          const progressBar = document.getElementById("flash-progress-bar");
+          const duration = 5000; // 5 seconds
+        
+          if (flashMessage) {
+            let start = Date.now();
+        
+            const timer = setInterval(() => {
+              let timePassed = Date.now() - start;
+              let percent = 100 - (timePassed / duration) * 100;
+              progressBar.style.width = percent + "%";
+        
+              if (timePassed >= duration) {
+                clearInterval(timer);
+                dismissFlash();
+              }
+            }, 30);
+          }
+        });
+        </script>
+
+
+
+        <!-- Bootstrap JS Bundle (optional) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

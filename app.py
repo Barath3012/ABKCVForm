@@ -2,9 +2,14 @@ from flask import Flask, render_template, request, flash, url_for, redirect, ses
 import os
 from werkzeug.utils import secure_filename
 import PyPDF2
-
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///submissions.db'  # or a cloud URL
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 app.secret_key = 'boombayah'
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -16,6 +21,13 @@ REQUIRED_SECTIONS = [
     "Technical Stack",
     "Projects worked"
 ]
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fullname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    platform = db.Column(db.String(50), nullable=False)
+    filepath = db.Column(db.String(200), nullable=False)
+
 
 def pdf_contains_required_sections(filepath):
     try:
@@ -47,7 +59,12 @@ def index():
     
 @app.route('/upload', methods=['POST'])
 def upload():
-    session['form_data'] = request.form.to_dict()
+    form_data = request.form.to_dict()
+    session['form_data'] = form_data
+    email = form_data.get("email")
+    if Submission.query.filter_by(email=email).first():
+        flash("❌ This email has already submitted a CV.")
+        return redirect(url_for('index'))
     file = request.files['file']
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
